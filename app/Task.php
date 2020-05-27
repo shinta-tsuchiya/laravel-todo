@@ -1,0 +1,70 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+
+class Task extends Model
+{
+    /**
+     * 状態定義
+     */
+    const STATUS = [
+        // 定数STATUS
+        1 => ['label' => '未着手', 'class' => 'label-danger'],
+        2 => ['label' => '着手中', 'class' => 'label-info'],
+        3 => ['label' => '完了', 'class' => ''],
+    ];
+
+    /**
+     * 状態のラベル
+     * @return string
+     */
+
+    public function getStatusLabelAttribute()
+    // getStatusLabelAttributeメソッド
+    {
+        // 状態値
+        $status = $this->attributes['status'];
+        // statusカラムの値を取得
+        // Laravelはモデルクラスの属性データは $attributesという1つのプロパティで管理
+
+        // 定義されていなければ空文字を返す
+        if (!isset(self::STATUS[$status])) {
+            // isset 変数が存在する場合はTRUE
+            // !isset 変数が存在しなければTRUE
+            return '';
+        }
+
+        return self::STATUS[$status]['label'];
+    }
+
+    /**
+     * 状態を表すHTMLクラスクラス
+     * @return string
+     */
+
+    public function getStatusClassAttribute()
+    {
+        // 状態値
+        $status = $this->attributes['status'];
+
+        // 定義されていなければ空文字を返す
+        if (!isset(self::STATUS[$status])) {
+            return '';
+        }
+
+        return self::STATUS[$status]['class'];
+    }
+
+    /**
+     * 整形した期限日
+     * @return string
+     */
+    public function getFormattedDueDateAttribute()
+    {
+        return Carbon::createFromFormat('Y-m-d', $this->attributes['due_date'])
+        ->format('Y/m/d');
+    }
+}
