@@ -26,3 +26,6 @@ Route::post('/folders/create', 'FolderController@create');
  * 同一URKでHTTPのメソッド違いのルートがいくつか有る場合は
  * どれか1つに名前をつければOK
  */
+
+Route::get('/folders/{id}/tasks/create', 'TaskController@showCreateForm')->name('tasks.create');
+Route::post('/folders/{id}/tasks/create', 'TaskController@create');
