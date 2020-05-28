@@ -1,6 +1,7 @@
 <?php
 
 Route::get('/folders/{id}/tasks', 'TaskController@index') -> name('tasks.index');
+
 /* Routeクラスがルーティングの設定
  コードの意味は左から呼んだまま
  getで /folders/{id}/tasks にリクエストが来たら TaskController コントローラーの
@@ -12,4 +13,16 @@ Route::get('/folders/{id}/tasks', 'TaskController@index') -> name('tasks.index')
  
  idの値は変動するので波括弧の箇所で表現する
  波括弧の間の名前、今回はid、はどんな値でもOK
+ */
+
+Route::get('/folders/create', 'FolderController@showCreateForm')->name('folders.create');
+Route::post('/folders/create', 'FolderController@create');
+
+/**
+ * RouteクラスにはHTTPメソッドに応じたクラスメソッドが用意されている
+ * 
+ * nameメソッドによるルートの命名はgetだけに定義をしているのは、
+ * 名前を付けた後に呼び出せるのはURKだけ
+ * 同一URKでHTTPのメソッド違いのルートがいくつか有る場合は
+ * どれか1つに名前をつければOK
  */
