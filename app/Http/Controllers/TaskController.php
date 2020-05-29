@@ -6,6 +6,7 @@ use App\Folder;
 use App\Task;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateTask;
+use App\Http\Requests\EditTask;
 
 class TaskController extends Controller
 {
@@ -15,6 +16,8 @@ class TaskController extends Controller
     // この時の引数名はルーティングで定義した波括弧内の値と合致しなければならない
     // {id} と定義したので $id
     // 仮に {sample_value} なら $sample_value で受け取る必要がある
+    // public function 関数名(){処理;} public~アクセス権
+
     {
         // 全てのフォルダを取得する
         $folders = Folder::all();
@@ -47,11 +50,11 @@ class TaskController extends Controller
             // 第一引数がテンプレートファイル名
             // 第二引数がテンプレートに渡すデータ
             // ここでは配列を渡している、キーがテンプレート側で参照する際の変数名
-            
+
             'folders' => $folders,
             // view関数の結果をコントローラーメソッドから返却すると、
             // テンプレートをレンダリングした結果のHTMLがフレームワークによってブラウザにレスポンスされる
-            
+
             'current_folder_id' => $current_folder->id,
             // 受け取った値をテンプレートに渡す
             // 'current_..' という名前で参照するように記述
@@ -91,6 +94,45 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.index', [
             'id' => $current_folder->id,
+        ]);
+    }
+
+    /**
+     * GET /folders/{id}/tasks/{tasks_id}/edit
+     */
+
+    // 編集対象のタスクデータを取得してテンプレートに渡す
+    /**
+     * 編集画面で画面が表示された時にその時点でタスクの各項目の値が、
+     * 入力欄に既に入っているべき
+     * テンプレートでフォームを作成する時に各input要素のvalueに値を入れるために
+     * タスクを渡している
+     */
+    public function showEditForm(int $id, int $task_id)
+    {
+        $task = Task::find($task_id);
+
+        return view('tasks/edit', [
+            'task' => $task,
+        ]);
+    }
+
+
+    // edit メソッド
+    public function edit(int $id, int $task_id, EditTask $request)
+    {
+        // 1 リクエストされたIDでタスクデータを取得 これが編集対象となる
+        $task = Task::find($task_id);
+
+        // 2 編集対象のタスクデータに入力値を詰めて save
+        $task->title = $request->title;
+        $task->status = $request->status;
+        $task->due_date = $request->due_date;
+        $task->save();
+
+        // 3 最後に編集対象のタスクが属するタスク一覧画面へリダイレクト
+        return redirect()->route('tasks.index', [
+            'id' => $task->folder_id,
         ]);
     }
 }
