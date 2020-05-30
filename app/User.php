@@ -36,4 +36,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // ユーザーとフォルダの関係性をモデルに記述
+    // Folder モデルに hasMany メソッドを追加した時と同じパターン
+    public function folders()
+    {
+        return $this->hasMany('App\Folder');
+    }
 }

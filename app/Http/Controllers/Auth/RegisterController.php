@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+// 会員登録機能を受け持つコントローラー
+
 class RegisterController extends Controller
 {
     /*
@@ -29,7 +31,11 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+
+    /**
+     * $redirectTo は登録に成功した後のリダイレクト先
+     */
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -47,12 +53,34 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+
+    /**
+     * validator メソッドでバリデーションが定義されている
+     * FormRequestクラスを使わずに、コントローラーの中で
+     * validator クラスの make メソッドからバリデーション定義を作成する方法もある
+     */
     protected function validator(array $data)
     {
+        /** make メソッド
+         * 第一引数:検証するデータ 第二引数:ルール定義
+         * 第三引数:メッセージ定義 第四引数:項目名定義
+         * メッセージは validation.php で定義するので、配列を渡し、第四引数で日本語の項目名を定義
+         */
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'name' => 'required | string | max:255',
+
+            /** unique ルール
+             * 実際にデータベースの内容を参照して既に使用されている値かどうか確かめるルール
+             * ルールの引数である users は参照するテーブル名
+             * 'email' => 'unique:users' は email の入力値は users テーブルの email カラムで
+             * 使われていない値でなければいけない、と言う意味
+             */
+            'email' => 'required | string | email | max:255 | unique:users',
+            'password' => 'required | string | min:6 | confirmed',
+        ], [], [
+            'name' => 'ユーザー名',
+            'email' => 'メールアドレス',
+            'password' => 'パスワード',
         ]);
     }
 
