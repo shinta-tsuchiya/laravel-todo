@@ -7,6 +7,8 @@ use App\Task;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateTask;
 use App\Http\Requests\EditTask;
+// Authクラスをインポートする
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -19,10 +21,12 @@ class TaskController extends Controller
     // public function 関数名(){処理;} public~アクセス権
 
     {
-        // 全てのフォルダを取得する
-        $folders = Folder::all();
+        // 全てのフォルダを取得する->ユーザーのフォルダを取得する
+        // $folders = Folder::all();
         // Folder モデルの all クラスメソッド
         // すべてのフォルダデータをデータベースから取得
+        // ->ログインユーザーが持つフォルダのみ取得する記述に変更
+        $folders = Auth::user()->folders()->get();
 
         // 選ばれたフォルダを取得する
         $current_folder = Folder::find($id);

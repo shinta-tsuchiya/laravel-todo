@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 // クラスのインポート
-use App\Folder; // Folderクラスを使えるようにする記述
+// Folderクラスを使えるようにする記述
+use App\Folder; 
 use Illuminate\Http\Request;
-use App\Http\Requests\CreateFolder; // titleのバリデーションの設定
 // CreateFolderクラスのインポート
+use App\Http\Requests\CreateFolder; // titleのバリデーションの設定
+// Authクラスをインポートする
+use Illuminate\Support\Facades\Auth;
 
 class FolderController extends Controller
 /**
@@ -50,9 +53,17 @@ class FolderController extends Controller
         //                リクエスト中の入力値はプロパティとして取得
 
         // 3.インスタンスの状態をデータベースに書き込む
-        $folder->save();
         // saveメソッドを呼び出す
         //これにより、モデルクラスが表すテーブルに対してINSERTが実行される
+        // $folder->save();
+
+        // ユーザーに紐付けて保存
+        // Auth::user() でユーザーモデルが取得できるので、前章で定義したリレーションを利用して
+        // フォルダモデルを保存している
+        // タスク作成を実装した以下のコードと同じパターン
+        // $current_folde->tasks()->save($task);
+        Auth::user()->folders()->save($folder);
+
         
 
         // リダイレクト先の指定、redirectメソッドに続いてrouteメソッドを呼び出し

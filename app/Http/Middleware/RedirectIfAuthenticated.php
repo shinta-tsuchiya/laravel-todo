@@ -16,10 +16,18 @@ class RedirectIfAuthenticated
      * @param  string|null  $guard
      * @return mixed
      */
+
+    /**
+     * このミドルウェアはユーザーが認証済みの場合は、コントローラーなどの
+     * 後続のプログラムに処理を渡さずにリダイレクトしている
+     * リダイレクト先がデフォルトでは '/home' と記述されているが、
+     * 今回はアプリケーションにはそのようなURLを持つページは存在しないので
+     * ホームページのURL / に書き換える
+     */
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect(RouteServiceProvider::HOME);
+            return redirect('/');
         }
 
         return $next($request);

@@ -51,6 +51,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        /**
+         * 'auth' このミドルウェアはアクセスしたユーザーの認証状態をチェックして、
+         * ログインしていたらそのままコントローラーメソッド(または次のミドルウェア)に処理を渡す
+         * ログインしていなければログイン画面にリダイレクトさせる
+         */
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
