@@ -27,7 +27,7 @@ class LoginController extends Controller
      * @var string
      */
     // 会員登録の時と同じ、ログインに成功したあとの遷移先
-    protected $redirectTo = '/';
+    protected $redirecttTo = '/';
 
     /**
      * Create a new controller instance.

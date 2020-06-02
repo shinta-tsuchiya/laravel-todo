@@ -25,7 +25,7 @@ class HomeController extends Controller
         // 返却する ()に入ったリダイレクト先へ
         // 中身はrouteのtasks.indexでidはフォルダのid
         return redirect()->route('tasks.index', [
-            'id' => $folder->id,
+            'folder' => $folder->id,
         ]);
     }
 }
